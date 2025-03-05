@@ -172,15 +172,20 @@ function Product() {
             onClick={() => {
               handleDisplay(-limit);
             }}
-            className="flex rounded-md w-24 h-10 bg-blue-600 text-white items-center justify-center text-xl font-bold"
+            className={`flex rounded-md w-24 h-10 items-center justify-center text-xl font-bold ${
+              skip < limit ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 text-white"
+            }`}
           >
             Prev
           </button>
           <button
+          disabled={products.length < limit}
             onClick={() => {
               handleDisplay(limit);
             }}
-            className="flex rounded-md w-24 h-10 bg-blue-600 text-white items-center justify-center text-xl font-bold"
+            className={`flex rounded-md w-24 h-10 items-center justify-center text-xl font-bold ${
+              products.length < limit ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 text-white"
+            }`}
           >
             Next
           </button>
