@@ -1,8 +1,22 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import debounce from "lodash.debounce";
+import { useState } from "react";
+
+
+
 
 function Product() {
+  const [search, setSearch] = useState('');
+  const [searchByCategory,setSearchByCategory]=useState('');
+  const debouncedSearch = debounce((query) => {
+    setSearchParams((prev) => {
+      prev.set("q", query);
+      prev.set("skip", 0);
+      prev.delete("category");
+      return prev;
+    });
+  }, 1000);
   const [searchParams, setSearchParams] = useSearchParams({
     limit: 4,
     skip: 0,
@@ -99,14 +113,12 @@ function Product() {
                     </svg>
                   </div>
                   <input
-                    onChange={debounce((e) => {
-                      setSearchParams((prev) => {
-                        prev.set("q", e.target.value);
-                        prev.set("skip", 0);
-                        prev.delete("category");
-                        return prev;
-                      });
-                    }, 1000)}
+                  value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setSearchByCategory('');
+                      debouncedSearch(e.target.value);
+                    }}
                     type="search"
                     id="default-search"
                     className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -119,8 +131,11 @@ function Product() {
 
             <div className="flex">
               <select
+              value={searchByCategory}
                 className="border p-2"
                 onChange={(e) => {
+                  setSearchByCategory(e.target.value);
+                  setSearch('');
                   setSearchParams((prev) => {
                     prev.set("skip", 0);
                     prev.delete("q");
